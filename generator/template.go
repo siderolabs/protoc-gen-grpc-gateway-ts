@@ -261,7 +261,7 @@ export const fetchReq = async <T, O>(method: string, path: string, body?: T, ...
 }
 
 // NotifyStreamEntityArrival is a callback that will be called on streaming entity arrival
-export type NotifyStreamEntityArrival<T> = (resp: T) => void
+export type NotifyStreamEntityArrival<T> = (resp: T) => void | PromiseLike<void>
 
 const getError = async (result: Response) => {
   let resp: any;
@@ -373,7 +373,7 @@ function getNewLineDelimitedJSONDecodingStream<T>(): TransformStream<string, T> 
 function getNotifyEntityArrivalSink<T>(notifyCallback: NotifyStreamEntityArrival<T>) {
   return new WritableStream<T>({
     write(entity: T) {
-      notifyCallback(entity)
+      return notifyCallback(entity)
     }
   })
 }
